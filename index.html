@@ -1,0 +1,2265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CASESBATTLE — открытие кейсов CS2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --bg: #08080b;
+    --bg-2: #0e0e14;
+    --bg-3: #15151c;
+    --bg-4: #1c1c24;
+    --border: #22222b;
+    --border-2: #2e2e38;
+    --text: #e6e6ea;
+    --text-2: #9a9aa5;
+    --text-3: #5a5a65;
+
+    --accent: #ffb700;
+    --accent-2: #ff7a00;
+    --accent-glow: rgba(255, 183, 0, 0.5);
+
+    --blue: #4a9eff;
+    --purple: #a855f7;
+    --pink: #ec4899;
+    --red: #ef4444;
+    --green: #22c55e;
+
+    --r-consumer: #b0c3d9;
+    --r-industrial: #5e98d9;
+    --r-milspec: #4b69ff;
+    --r-restricted: #8847ff;
+    --r-classified: #d32ce6;
+    --r-covert: #eb4b4b;
+    --r-contraband: #ffb700;
+
+    --font-d: 'Rajdhani', sans-serif;
+    --font-b: 'Inter', sans-serif;
+}
+
+html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-b);
+    min-height: 100vh;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-image:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(255, 183, 0, 0.08), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(168, 85, 247, 0.06), transparent),
+        radial-gradient(ellipse 50% 30% at 10% 60%, rgba(74, 158, 255, 0.05), transparent);
+    background-attachment: fixed;
+}
+
+/* Шумовая текстура поверх всего */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: overlay;
+}
+
+/* ============ ХЕДЕР ============ */
+.header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8, 8, 11, 0.85);
+    backdrop-filter: blur(24px) saturate(1.5);
+    -webkit-backdrop-filter: blur(24px) saturate(1.5);
+    border-bottom: 1px solid var(--border);
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6;
+}
+
+.header-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.35, 1);
+}
+
+.logo:hover { transform: scale(1.03); }
+
+.logo-img {
+    height: 44px;
+    width: auto;
+    max-width: 180px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 14px rgba(255, 183, 0, 0.5));
+    transition: filter 0.3s ease;
+}
+
+.logo:hover .logo-img {
+    filter: drop-shadow(0 0 22px rgba(255, 183, 0, 0.9));
+}
+
+.nav {
+    display: flex;
+    gap: 4px;
+    flex: 1;
+    justify-content: center;
+}
+
+.nav-link {
+    padding: 8px 16px;
+    border-radius: 8px;
+    color: var(--text-2);
+    font-family: var(--font-d);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.nav-link:hover {
+    color: var(--text);
+    background: var(--bg-3);
+}
+
+.nav-link.active {
+    color: var(--accent);
+    background: rgba(255, 183, 0, 0.08);
+    border-color: rgba(255, 183, 0, 0.3);
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.balance-chip {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, rgba(255, 183, 0, 0.15), rgba(255, 122, 0, 0.1));
+    border: 1px solid rgba(255, 183, 0, 0.4);
+    border-radius: 10px;
+    font-family: var(--font-d);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.15), inset 0 0 20px rgba(255, 183, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.balance-chip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+    transform: translateX(-100%);
+    animation: shine 3s ease-in-out infinite;
+}
+
+@keyframes shine {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+}
+
+.balance-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.profile-chip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px 6px 6px;
+    background: var(--bg-3);
+    border: 1px solid var(--border-2);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.profile-chip:hover {
+    border-color: var(--accent);
+    background: var(--bg-4);
+    transform: translateY(-1px);
+}
+
+.profile-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-d);
+    font-weight: 800;
+    font-size: 1rem;
+    color: #fff;
+    box-shadow: 0 0 14px rgba(74, 158, 255, 0.4);
+}
+
+.profile-name {
+    font-family: var(--font-d);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text);
+    letter-spacing: 0.3px;
+}
+
+/* ============ ГЛАВНАЯ ============ */
+.main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    position: relative;
+    z-index: 1;
+}
+
+.page { display: none; }
+.page.active { display: block; animation: fadeIn 0.5s cubic-bezier(0.25, 0.8, 0.35, 1); }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(24px); filter: blur(4px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.hero {
+    text-align: center;
+    margin-bottom: 50px;
+    position: relative;
+}
+
+.hero-tag {
+    display: inline-block;
+    padding: 6px 16px;
+    background: rgba(255, 183, 0, 0.1);
+    border: 1px solid rgba(255, 183, 0, 0.4);
+    border-radius: 20px;
+    color: var(--accent);
+    font-family: var(--font-d);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    animation: pulseTag 2.5s ease-in-out infinite;
+}
+
+@keyframes pulseTag {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255, 183, 0, 0.4); }
+    50% { box-shadow: 0 0 20px 4px rgba(255, 183, 0, 0.2); }
+}
+
+.hero h1 {
+    font-family: var(--font-d);
+    font-size: clamp(2.2rem, 6vw, 4rem);
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 50%, var(--accent-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(255, 183, 0, 0.3));
+}
+
+.hero p {
+    color: var(--text-2);
+    font-size: 1.05rem;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+/* ============ СЕТКА КЕЙСОВ ============ */
+.cases-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.case-card {
+    position: relative;
+    background: linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 20px 20px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.35, 1);
+    overflow: hidden;
+    user-select: none;
+}
+
+.case-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(255, 183, 0, 0.18), transparent 60%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+}
+
+.case-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.case-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: rgba(255, 183, 0, 0.5);
+    box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.7),
+        0 0 50px rgba(255, 183, 0, 0.2),
+        inset 0 0 40px rgba(255, 183, 0, 0.05);
+}
+
+.case-card:hover::before { opacity: 1; }
+.case-card:hover::after { opacity: 1; }
+
+.case-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-family: var(--font-d);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    z-index: 2;
+    animation: badgePulse 2s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+.case-badge.hot {
+    background: linear-gradient(135deg, var(--red), #dc2626);
+    color: #fff;
+    box-shadow: 0 0 18px rgba(239, 68, 68, 0.6);
+}
+
+.case-badge.new {
+    background: linear-gradient(135deg, var(--blue), #3b82f6);
+    color: #fff;
+    box-shadow: 0 0 18px rgba(74, 158, 255, 0.5);
+}
+
+.case-badge.top {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #000;
+    box-shadow: 0 0 20px rgba(255, 183, 0, 0.6);
+}
+
+.case-image {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    position: relative;
+}
+
+.case-image svg {
+    width: 130px;
+    height: 130px;
+    filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.7));
+    transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.35, 1), filter 0.5s ease;
+}
+
+.case-card:hover .case-image svg {
+    transform: scale(1.1) rotate(-3deg);
+    filter: drop-shadow(0 14px 40px rgba(255, 183, 0, 0.4));
+}
+
+.case-name {
+    font-family: var(--font-d);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+.case-desc {
+    color: var(--text-3);
+    font-size: 0.82rem;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.case-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 14px;
+    border-top: 1px solid var(--border);
+}
+
+.case-price {
+    font-family: var(--font-d);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}
+
+.case-price.free {
+    color: var(--green);
+}
+
+.case-arrow {
+    color: var(--text-3);
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.case-card:hover .case-arrow {
+    color: var(--accent);
+    transform: translateX(4px);
+}
+
+/* ============ СТРАНИЦА КЕЙСА ============ */
+.case-page {
+    animation: fadeIn 0.5s ease;
+}
+
+.case-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 18px;
+    background: var(--bg-3);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    color: var(--text-2);
+    font-family: var(--font-d);
+    font-weight: 600;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+}
+
+.case-back:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateX(-4px);
+}
+
+.case-page-header {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+}
+
+.case-page-icon {
+    width: 140px;
+    height: 140px;
+    flex-shrink: 0;
+    background: radial-gradient(circle at 50% 50%, rgba(255, 183, 0, 0.2), transparent 70%);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.case-page-icon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 183, 0, 0.3);
+    animation: caseIconRotate 8s linear infinite;
+    background: conic-gradient(from 0deg, transparent, rgba(255, 183, 0, 0.4), transparent);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    padding: 1px;
+}
+
+@keyframes caseIconRotate {
+    to { transform: rotate(360deg); }
+}
+
+.case-page-icon svg {
+    width: 100px;
+    height: 100px;
+    filter: drop-shadow(0 0 30px rgba(255, 183, 0, 0.5));
+    animation: caseIconFloat 3s ease-in-out infinite;
+}
+
+@keyframes caseIconFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.case-page-info { flex: 1; min-width: 240px; }
+
+.case-page-title {
+    font-family: var(--font-d);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    background: linear-gradient(135deg, #fff, var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.case-page-desc {
+    color: var(--text-2);
+    font-size: 0.95rem;
+    margin-bottom: 16px;
+    line-height: 1.6;
+    max-width: 600px;
+}
+
+.case-page-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.case-page-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.case-page-meta-label {
+    font-size: 0.7rem;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+}
+
+.case-page-meta-value {
+    font-family: var(--font-d);
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.case-page-open-btn {
+    padding: 16px 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    font-family: var(--font-d);
+    font-weight: 800;
+    font-size: 1.1rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(255, 183, 0, 0.4);
+}
+
+.case-page-open-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+}
+
+.case-page-open-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 14px 40px rgba(255, 183, 0, 0.6);
+}
+
+.case-page-open-btn:hover::before {
+    transform: translateX(100%);
+}
+
+.case-page-open-btn:active {
+    transform: translateY(-1px) scale(1);
+}
+
+/* ============ СОДЕРЖИМОЕ КЕЙСА ============ */
+.case-contents {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-top: 32px;
+}
+
+.case-contents-title {
+    font-family: var(--font-d);
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.case-contents-title::before {
+    content: '';
+    width: 4px;
+    height: 18px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 12px var(--accent);
+}
+
+.contents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.content-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: var(--bg-3);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.content-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+}
+
+.content-item[data-r="consumer"]::after { background: var(--r-consumer); }
+.content-item[data-r="industrial"]::after { background: var(--r-industrial); }
+.content-item[data-r="milspec"]::after { background: var(--r-milspec); }
+.content-item[data-r="restricted"]::after { background: var(--r-restricted); }
+.content-item[data-r="classified"]::after { background: var(--r-classified); }
+.content-item[data-r="covert"]::after { background: var(--r-covert); }
+.content-item[data-r="contraband"]::after { background: var(--r-contraband); }
+
+.content-item:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-2);
+}
+
+.content-item[data-r="milspec"]:hover { box-shadow: 0 8px 24px rgba(75, 105, 255, 0.25); }
+.content-item[data-r="restricted"]:hover { box-shadow: 0 8px 24px rgba(136, 71, 255, 0.25); }
+.content-item[data-r="classified"]:hover { box-shadow: 0 8px 24px rgba(211, 44, 230, 0.25); }
+.content-item[data-r="covert"]:hover { box-shadow: 0 8px 24px rgba(235, 75, 75, 0.3); }
+.content-item[data-r="contraband"]:hover { box-shadow: 0 8px 24px rgba(255, 183, 0, 0.3); }
+
+.content-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.content-icon svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+}
+
+.content-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.content-name {
+    font-family: var(--font-d);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.3px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.content-rarity {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+}
+
+.content-rarity[data-r="consumer"] { color: var(--r-consumer); }
+.content-rarity[data-r="industrial"] { color: var(--r-industrial); }
+.content-rarity[data-r="milspec"] { color: var(--r-milspec); }
+.content-rarity[data-r="restricted"] { color: var(--r-restricted); }
+.content-rarity[data-r="classified"] { color: var(--r-classified); }
+.content-rarity[data-r="covert"] { color: var(--r-covert); }
+.content-rarity[data-r="contraband"] { color: var(--r-contraband); }
+
+/* ============ РУЛЕТКА ============ */
+.roulette-wrap {
+    background: linear-gradient(180deg, #0a0a0e 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px 0;
+    margin-bottom: 32px;
+    position: relative;
+    overflow: hidden;
+    height: 220px;
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.8);
+}
+
+.roulette-wrap::before,
+.roulette-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 180px;
+    z-index: 5;
+    pointer-events: none;
+}
+
+.roulette-wrap::before {
+    left: 0;
+    background: linear-gradient(90deg, #08080b, transparent);
+}
+
+.roulette-wrap::after {
+    right: 0;
+    background: linear-gradient(-90deg, #08080b, transparent);
+}
+
+.roulette-marker {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, var(--accent), var(--accent), transparent);
+    z-index: 10;
+    transform: translateX(-50%);
+    box-shadow: 0 0 24px var(--accent), 0 0 48px rgba(255, 183, 0, 0.5);
+    pointer-events: none;
+}
+
+.roulette-marker::before,
+.roulette-marker::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-style: solid;
+    filter: drop-shadow(0 0 8px var(--accent));
+}
+
+.roulette-marker::before {
+    top: 0;
+    border-width: 12px 10px 0 10px;
+    border-color: var(--accent) transparent transparent transparent;
+}
+
+.roulette-marker::after {
+    bottom: 0;
+    border-width: 0 10px 12px 10px;
+    border-color: transparent transparent var(--accent) transparent;
+}
+
+.roulette-track {
+    display: flex;
+    gap: 10px;
+    padding: 15px 0;
+    transition: transform 6.5s cubic-bezier(0.15, 0.9, 0.15, 1);
+    will-change: transform;
+}
+
+.roulette-item {
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    background: linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.roulette-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.roulette-item[data-r="consumer"]::after { background: var(--r-consumer); }
+.roulette-item[data-r="industrial"]::after { background: var(--r-industrial); }
+.roulette-item[data-r="milspec"]::after { background: var(--r-milspec); }
+.roulette-item[data-r="restricted"]::after { background: var(--r-restricted); }
+.roulette-item[data-r="classified"]::after { background: var(--r-classified); }
+.roulette-item[data-r="covert"]::after { background: var(--r-covert); }
+.roulette-item[data-r="contraband"]::after { background: var(--r-contraband); }
+
+.roulette-item[data-r="milspec"] { border-color: rgba(75, 105, 255, 0.4); }
+.roulette-item[data-r="restricted"] { border-color: rgba(136, 71, 255, 0.4); }
+.roulette-item[data-r="classified"] { border-color: rgba(211, 44, 230, 0.4); }
+.roulette-item[data-r="covert"] { border-color: rgba(235, 75, 75, 0.4); }
+.roulette-item[data-r="contraband"] {
+    border-color: rgba(255, 183, 0, 0.5);
+    box-shadow: inset 0 0 30px rgba(255, 183, 0, 0.15);
+}
+
+.roulette-icon {
+    width: 66px;
+    height: 66px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.roulette-icon svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.6));
+}
+
+.roulette-name {
+    font-family: var(--font-d);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.15;
+    color: var(--text);
+    letter-spacing: 0.2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* ============ РЕЗУЛЬТАТ ============ */
+.result-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 500;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: overlayIn 0.4s ease;
+}
+
+.result-overlay.show { display: flex; }
+
+@keyframes overlayIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.result-card {
+    position: relative;
+    background: linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
+    border-radius: 24px;
+    padding: 44px 36px 36px;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    border: 2px solid var(--border-2);
+    animation: resultZoom 0.6s cubic-bezier(0.25, 0.8, 0.35, 1);
+    overflow: hidden;
+}
+
+@keyframes resultZoom {
+    from { transform: scale(0.5) rotate(-4deg); opacity: 0; }
+    to { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+.result-card[data-r="consumer"] { border-color: var(--r-consumer); }
+.result-card[data-r="industrial"] { border-color: var(--r-industrial); box-shadow: 0 0 50px rgba(94, 152, 217, 0.4); }
+.result-card[data-r="milspec"] { border-color: var(--r-milspec); box-shadow: 0 0 70px rgba(75, 105, 255, 0.5); }
+.result-card[data-r="restricted"] { border-color: var(--r-restricted); box-shadow: 0 0 90px rgba(136, 71, 255, 0.5); }
+.result-card[data-r="classified"] { border-color: var(--r-classified); box-shadow: 0 0 110px rgba(211, 44, 230, 0.5); }
+.result-card[data-r="covert"] { border-color: var(--r-covert); box-shadow: 0 0 130px rgba(235, 75, 75, 0.6); }
+.result-card[data-r="contraband"] {
+    border-color: var(--r-contraband);
+    box-shadow: 0 0 150px rgba(255, 183, 0, 0.7);
+    background: linear-gradient(180deg, #1f1808 0%, #15100a 100%);
+}
+
+.result-glow {
+    position: absolute;
+    inset: -50%;
+    background: radial-gradient(circle, currentColor, transparent 60%);
+    opacity: 0.18;
+    pointer-events: none;
+    animation: resultGlow 3s ease-in-out infinite;
+}
+
+@keyframes resultGlow {
+    0%, 100% { transform: scale(1); opacity: 0.18; }
+    50% { transform: scale(1.4); opacity: 0.35; }
+}
+
+.result-rarity {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-family: var(--font-d);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 22px;
+    position: relative;
+    z-index: 1;
+}
+
+.result-rarity[data-r="consumer"] { background: var(--r-consumer); color: #000; }
+.result-rarity[data-r="industrial"] { background: var(--r-industrial); color: #fff; }
+.result-rarity[data-r="milspec"] { background: var(--r-milspec); color: #fff; }
+.result-rarity[data-r="restricted"] { background: var(--r-restricted); color: #fff; }
+.result-rarity[data-r="classified"] { background: var(--r-classified); color: #fff; }
+.result-rarity[data-r="covert"] { background: var(--r-covert); color: #fff; }
+.result-rarity[data-r="contraband"] { background: var(--r-contraband); color: #000; }
+
+.result-icon {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    animation: resultIconFloat 3s ease-in-out infinite;
+}
+
+@keyframes resultIconFloat {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+.result-icon svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 12px 40px rgba(0, 0, 0, 0.7));
+}
+
+.result-name {
+    font-family: var(--font-d);
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: #fff;
+    position: relative;
+    z-index: 1;
+}
+
+.result-price {
+    color: var(--accent);
+    font-family: var(--font-d);
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.result-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    flex-wrap: wrap;
+}
+
+.result-btn {
+    padding: 12px 26px;
+    border-radius: 10px;
+    border: none;
+    font-family: var(--font-d);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.result-btn.primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #000;
+    box-shadow: 0 6px 24px rgba(255, 183, 0, 0.4);
+}
+
+.result-btn.primary:hover {
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 10px 32px rgba(255, 183, 0, 0.6);
+}
+
+.result-btn.secondary {
+    background: transparent;
+    color: var(--text);
+    border: 1px solid var(--border-2);
+}
+
+.result-btn.secondary:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+/* ============ ПРОФИЛЬ ============ */
+.profile-page {
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.profile-header-card {
+    background: linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 100%);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px 32px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.profile-header-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(from 0deg, transparent, rgba(255, 183, 0, 0.15), transparent 30%);
+    animation: rotateConic 12s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotateConic {
+    to { transform: rotate(360deg); }
+}
+
+.profile-header-inner {
+    position: relative;
+    z-index: 1;
+}
+
+.profile-avatar-lg {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 20px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-d);
+    font-weight: 900;
+    font-size: 2.4rem;
+    color: #fff;
+    box-shadow: 0 0 40px rgba(74, 158, 255, 0.5);
+    animation: avatarPulse 3s ease-in-out infinite;
+}
+
+@keyframes avatarPulse {
+    0%, 100% { box-shadow: 0 0 40px rgba(74, 158, 255, 0.5); }
+    50% { box-shadow: 0 0 60px rgba(168, 85, 247, 0.7); }
+}
+
+.profile-nickname {
+    font-family: var(--font-d);
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #fff;
+    margin-bottom: 6px;
+}
+
+.profile-status {
+    color: var(--text-3);
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-box {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-box:hover {
+    border-color: rgba(255, 183, 0, 0.4);
+    transform: translateY(-3px);
+}
+
+.stat-box-label {
+    font-size: 0.7rem;
+    color: var(--text-3);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.stat-box-value {
+    font-family: var(--font-d);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+}
+
+.profile-actions {
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+}
+
+.profile-actions-title {
+    font-family: var(--font-d);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 16px;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 20px;
+    background: var(--bg-3);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: var(--font-d);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.action-btn:last-child { margin-bottom: 0; }
+
+.action-btn:hover {
+    border-color: var(--accent);
+    background: var(--bg-4);
+    transform: translateX(4px);
+}
+
+.action-btn.danger:hover {
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.action-btn-arrow {
+    color: var(--text-3);
+    transition: transform 0.3s ease;
+}
+
+.action-btn:hover .action-btn-arrow {
+    transform: translateX(4px);
+    color: var(--accent);
+}
+
+/* ============ ИСТОРИЯ ============ */
+.history-box {
+    margin-top: 24px;
+    background: var(--bg-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.history-title {
+    font-family: var(--font-d);
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.history-title::before {
+    content: '';
+    width: 3px;
+    height: 14px;
+    background: var(--accent);
+    border-radius: 2px;
+    box-shadow: 0 0 10px var(--accent);
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 340px;
+    overflow-y: auto;
+}
+
+.history-list::-webkit-scrollbar { width: 6px; }
+.history-list::-webkit-scrollbar-track { background: var(--bg-3); border-radius: 3px; }
+.history-list::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+.history-list::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+.history-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-3);
+    border-radius: 8px;
+    border-left: 3px solid var(--border);
+    font-size: 0.85rem;
+    animation: slideIn 0.4s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.history-item[data-r="consumer"] { border-left-color: var(--r-consumer); }
+.history-item[data-r="industrial"] { border-left-color: var(--r-industrial); }
+.history-item[data-r="milspec"] { border-left-color: var(--r-milspec); }
+.history-item[data-r="restricted"] { border-left-color: var(--r-restricted); }
+.history-item[data-r="classified"] { border-left-color: var(--r-classified); }
+.history-item[data-r="covert"] { border-left-color: var(--r-covert); }
+.history-item[data-r="contraband"] { border-left-color: var(--r-contraband); }
+
+.history-empty {
+    color: var(--text-3);
+    font-style: italic;
+    font-size: 0.85rem;
+    padding: 12px 0;
+    text-align: center;
+}
+
+.history-name {
+    flex: 1;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.history-rarity {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.history-rarity[data-r="consumer"] { background: var(--r-consumer); color: #000; }
+.history-rarity[data-r="industrial"] { background: var(--r-industrial); color: #fff; }
+.history-rarity[data-r="milspec"] { background: var(--r-milspec); color: #fff; }
+.history-rarity[data-r="restricted"] { background: var(--r-restricted); color: #fff; }
+.history-rarity[data-r="classified"] { background: var(--r-classified); color: #fff; }
+.history-rarity[data-r="covert"] { background: var(--r-covert); color: #fff; }
+.history-rarity[data-r="contraband"] { background: var(--r-contraband); color: #000; }
+
+.history-price {
+    font-family: var(--font-d);
+    font-weight: 700;
+    color: var(--accent);
+    font-size: 0.85rem;
+}
+
+/* ============ ФУТЕР ============ */
+.footer {
+    text-align: center;
+    padding: 32px 24px;
+    color: var(--text-3);
+    font-size: 0.8rem;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+    position: relative;
+}
+
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+/* ============ МОБИЛЬНЫЙ ============ */
+@media (max-width: 900px) {
+    .nav { display: none; }
+    .header-inner { padding: 12px 16px; }
+}
+
+@media (max-width: 640px) {
+    .main { padding: 24px 16px 60px; }
+    .cases-grid { grid-template-columns: 1fr; gap: 14px; }
+    .case-image { height: 130px; }
+    .case-image svg { width: 100px; height: 100px; }
+    .case-page-header { flex-direction: column; align-items: flex-start; }
+    .case-page-icon { width: 110px; height: 110px; }
+    .case-page-icon svg { width: 80px; height: 80px; }
+    .roulette-wrap { height: 190px; }
+    .roulette-item { width: 120px; height: 120px; }
+    .roulette-icon { width: 54px; height: 54px; }
+    .roulette-name { font-size: 0.62rem; }
+    .roulette-wrap::before, .roulette-wrap::after { width: 60px; }
+    .result-card { padding: 32px 22px 26px; }
+    .result-icon { width: 110px; height: 110px; }
+    .result-name { font-size: 1.2rem; }
+    .stats-row { grid-template-columns: 1fr; }
+    .header-right { gap: 8px; }
+    .balance-chip { padding: 6px 12px; font-size: 0.9rem; }
+    .profile-name { display: none; }
+    .profile-chip { padding: 5px; }
+    .contents-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <div class="logo" onclick="goHome()">
+            <img class="logo-img" src="https://casesbattle.cfd/orig.png" alt="CASESBATTLE" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="logo-mark" style="display:none; width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,#ffb700,#ff7a00); align-items:center; justify-content:center; font-family:'Rajdhani',sans-serif; font-weight:900; font-size:1.1rem; color:#000;">CB</div>
+        </div>
+        <nav class="nav">
+            <div class="nav-link active" id="navCases" onclick="goHome()">Кейсы</div>
+            <div class="nav-link" id="navProfile" onclick="openProfile()">Профиль</div>
+        </nav>
+        <div class="header-right">
+            <div class="balance-chip">
+                <svg class="balance-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path d="M12 7v10M9 10h5a2 2 0 0 1 0 4H9"/>
+                </svg>
+                <span id="balanceValue">1000</span>
+            </div>
+            <div class="profile-chip" onclick="openProfile()">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <div class="profile-name" id="profileName">Игрок</div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="main">
+
+    <!-- ГЛАВНАЯ -->
+    <section id="pageHome" class="page active">
+        <div class="hero">
+            <div class="hero-tag">CS2 CASE OPENING</div>
+            <h1>Открывай кейсы CS2</h1>
+            <p>Собери коллекцию скинов и предметов из Counter-Strike 2. Испытай удачу — от обычных до легендарных Contraband.</p>
+        </div>
+        <div class="cases-grid" id="casesGrid"></div>
+    </section>
+
+    <!-- СТРАНИЦА КЕЙСА -->
+    <section id="pageCase" class="page">
+        <div class="case-page">
+            <button class="case-back" onclick="goHome()">← Назад к кейсам</button>
+            <div class="case-page-header">
+                <div class="case-page-icon" id="casePageIcon"></div>
+                <div class="case-page-info">
+                    <div class="case-page-title" id="casePageTitle">Кейс</div>
+                    <div class="case-page-desc" id="casePageDesc">Описание</div>
+                    <div class="case-page-meta">
+                        <div class="case-page-meta-item">
+                            <span class="case-page-meta-label">Стоимость</span>
+                            <span class="case-page-meta-value" id="casePagePrice">0 ₽</span>
+                        </div>
+                        <div class="case-page-meta-item">
+                            <span class="case-page-meta-label">Предметов</span>
+                            <span class="case-page-meta-value" id="casePageCount">0</span>
+                        </div>
+                        <div class="case-page-meta-item">
+                            <span class="case-page-meta-label">Лучший дроп</span>
+                            <span class="case-page-meta-value" id="casePageBest">—</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="case-page-open-btn" id="casePageOpenBtn">Открыть кейс</button>
+
+            <div class="case-contents">
+                <div class="case-contents-title">Содержимое кейса</div>
+                <div class="contents-grid" id="contentsGrid"></div>
+            </div>
+
+            <div class="roulette-wrap" id="rouletteWrap" style="display:none; margin-top:32px;">
+                <div class="roulette-marker"></div>
+                <div class="roulette-track" id="rouletteTrack"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ПРОФИЛЬ -->
+    <section id="pageProfile" class="page">
+        <div class="profile-page">
+            <button class="case-back" onclick="goHome()">← Назад к кейсам</button>
+            <div class="profile-header-card">
+                <div class="profile-header-inner">
+                    <div class="profile-avatar-lg" id="profileAvatarLg">U</div>
+                    <div class="profile-nickname" id="profileNickname">Игрок</div>
+                    <div class="profile-status">Уровень: Новичок</div>
+                </div>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-box-label">Баланс</div>
+                    <div class="stat-box-value" id="profileBalance">1000</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-label">Открыто</div>
+                    <div class="stat-box-value" id="profileOpened">0</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-box-label">Топ-дроп</div>
+                    <div class="stat-box-value" id="profileTop" style="font-size:1rem;">—</div>
+                </div>
+            </div>
+
+            <div class="profile-actions">
+                <div class="profile-actions-title">Управление</div>
+                <button class="action-btn" onclick="changeNickname()">
+                    <span>Изменить никнейм</span>
+                    <span class="action-btn-arrow">→</span>
+                </button>
+                <button class="action-btn" onclick="addBalance()">
+                    <span>Пополнить баланс (+1000 ₽)</span>
+                    <span class="action-btn-arrow">→</span>
+                </button>
+                <button class="action-btn danger" onclick="resetBalance()">
+                    <span>Сбросить баланс (1000 ₽)</span>
+                    <span class="action-btn-arrow">→</span>
+                </button>
+                <button class="action-btn danger" onclick="resetAll()">
+                    <span>Полный сброс профиля</span>
+                    <span class="action-btn-arrow">→</span>
+                </button>
+            </div>
+
+            <div class="history-box">
+                <div class="history-title">История выпадений</div>
+                <div class="history-list" id="historyList">
+                    <div class="history-empty">Пока ничего не выпало</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>CASESBATTLE — учебный проект. Все товарные знаки принадлежат их владельцам.</p>
+</footer>
+
+<!-- РЕЗУЛЬТАТ -->
+<div class="result-overlay" id="resultOverlay">
+    <div class="result-card" id="resultCard">
+        <div class="result-glow" id="resultGlow"></div>
+        <div class="result-rarity" id="resultRarity">RARE</div>
+        <div class="result-icon" id="resultIcon"></div>
+        <div class="result-name" id="resultName">Название</div>
+        <div class="result-price" id="resultPrice">0 ₽</div>
+        <div class="result-actions">
+            <button class="result-btn primary" id="resultAgain">Ещё раз</button>
+            <button class="result-btn secondary" onclick="closeResult()">Закрыть</button>
+        </div>
+    </div>
+</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   ДАННЫЕ
+   ============================================================ */
+
+var RARITY = {
+    consumer:   { name: "Consumer Grade",  weight: 50 },
+    industrial: { name: "Industrial Grade", weight: 28 },
+    milspec:    { name: "Mil-Spec",        weight: 14 },
+    restricted: { name: "Restricted",      weight: 5 },
+    classified: { name: "Classified",      weight: 2 },
+    covert:     { name: "Covert",          weight: 0.8 },
+    contraband: { name: "Contraband",      weight: 0.2 }
+};
+
+/* ---------- SVG-ИКОНКИ ---------- */
+function svgAK(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 60"><path d="M5 30 L15 25 L35 25 L40 20 L60 20 L65 25 L95 30 L95 38 L65 42 L40 42 L35 38 L15 38 L5 34 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="30" y="42" width="10" height="12" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="55" y="42" width="15" height="8" rx="2" fill="' + c + '"/><circle cx="45" cy="30" r="4" fill="#1a1a1f"/></svg>'; }
+function svgM4(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 60"><path d="M8 32 L20 28 L40 28 L45 22 L65 22 L70 28 L92 32 L92 38 L70 40 L45 40 L40 34 L20 34 L8 36 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="35" y="40" width="8" height="14" rx="1" fill="' + c + '"/><rect x="60" y="40" width="18" height="9" rx="2" fill="' + c + '"/></svg>'; }
+function svgAWP(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 60"><path d="M5 30 L25 26 L55 22 L70 22 L75 26 L95 30 L95 34 L75 36 L55 36 L30 40 L5 36 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="42" y="36" width="10" height="16" rx="1" fill="' + c + '"/><rect x="65" y="36" width="20" height="7" rx="2" fill="' + c + '"/><circle cx="55" cy="22" r="3" fill="#1a1a1f"/><rect x="20" y="18" width="20" height="4" rx="1" fill="' + c + '" opacity="0.7"/></svg>'; }
+function svgGlock(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 60 70"><path d="M10 10 L45 10 L50 15 L50 30 L40 32 L38 50 L30 55 L15 55 L12 30 L10 20 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="40" y="25" width="15" height="12" rx="1" fill="' + c + '"/></svg>'; }
+function svgDeagle(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 80 60"><path d="M10 15 L70 15 L75 20 L75 30 L60 32 L58 45 L50 50 L20 50 L18 32 L10 30 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="60" y="22" width="15" height="10" rx="1" fill="' + c + '"/></svg>'; }
+function svgKnife(c) { c = c || '#cbd5e1'; return '<svg viewBox="0 0 100 40"><path d="M5 20 L55 12 L85 20 L55 28 Z" fill="' + c + '" stroke="#444" stroke-width="1"/><rect x="5" y="14" width="20" height="12" rx="2" fill="#333"/><path d="M60 18 L78 20 L60 22" stroke="#fff" stroke-width="0.5" fill="none" opacity="0.5"/></svg>'; }
+function svgKarambit(c) { c = c || '#cbd5e1'; return '<svg viewBox="0 0 100 60"><path d="M20 40 Q15 15 40 10 Q65 5 80 25 Q85 35 75 45 Q60 55 40 50 Q25 45 20 40 Z" fill="' + c + '" stroke="#444" stroke-width="1"/><circle cx="30" cy="42" r="6" fill="#222"/><path d="M30 42 L45 40" stroke="#666" stroke-width="3"/></svg>'; }
+function svgButterfly(c) { c = c || '#cbd5e1'; return '<svg viewBox="0 0 100 50"><path d="M10 25 L45 15 L60 25 L45 35 Z" fill="' + c + '" stroke="#444" stroke-width="1"/><path d="M60 25 L85 15 L95 25 L85 35 Z" fill="' + c + '" stroke="#444" stroke-width="1"/><circle cx="50" cy="25" r="4" fill="#333"/></svg>'; }
+function svgP250(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 70 50"><path d="M5 15 L55 10 L65 15 L65 30 L55 35 L35 35 L30 45 L15 45 L12 30 L5 25 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="55" y="18" width="15" height="10" rx="1" fill="' + c + '"/></svg>'; }
+function svgUSP(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 60 65"><path d="M10 10 L50 12 L55 18 L55 35 L45 38 L42 55 L30 60 L15 55 L12 35 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="45" y="25" width="14" height="10" rx="1" fill="' + c + '"/></svg>'; }
+function svgMac10(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 80 55"><path d="M5 20 L65 15 L75 20 L75 35 L65 40 L35 40 L30 50 L15 50 L10 35 L5 30 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="60" y="20" width="14" height="10" rx="1" fill="' + c + '"/></svg>'; }
+function svgMp9(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 80 55"><path d="M5 22 L70 18 L78 22 L78 32 L68 36 L40 36 L35 48 L18 48 L14 34 L5 30 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="62" y="22" width="14" height="9" rx="1" fill="' + c + '"/></svg>'; }
+function svgUmp(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 90 55"><path d="M5 22 L75 18 L85 22 L85 32 L75 36 L40 38 L35 50 L15 50 L10 36 L5 32 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="70" y="22" width="14" height="9" rx="1" fill="' + c + '"/></svg>'; }
+function svgFamas(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 55"><path d="M5 25 L30 22 L50 20 L55 15 L70 15 L75 20 L90 25 L90 35 L75 38 L55 38 L50 35 L35 38 L30 48 L15 48 L12 34 L5 32 Z" fill="' + c + '" stroke="#222" stroke-width="1"/></svg>'; }
+function svgGalil(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 55"><path d="M5 24 L40 20 L65 20 L70 15 L80 15 L85 22 L95 24 L95 36 L80 38 L65 38 L40 40 L35 50 L18 50 L15 36 L5 34 Z" fill="' + c + '" stroke="#222" stroke-width="1"/></svg>'; }
+function svgAUG(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 55"><path d="M5 24 L55 20 L60 15 L85 15 L90 20 L95 24 L95 36 L90 38 L60 38 L55 42 L20 42 L15 50 L8 50 L6 36 L5 30 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><circle cx="70" cy="22" r="4" fill="#1a1a1f"/></svg>'; }
+function svgSG(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 55"><path d="M5 22 L50 18 L55 12 L80 12 L85 18 L95 22 L95 36 L85 38 L55 40 L30 42 L5 34 Z" fill="' + c + '" stroke="#222" stroke-width="1"/></svg>'; }
+function svgNova(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 40"><path d="M5 15 L60 12 L75 15 L95 20 L95 28 L70 30 L40 30 L5 26 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="40" y="30" width="15" height="8" fill="' + c + '"/></svg>'; }
+function svgNegev(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 60"><path d="M2 30 L15 24 L35 24 L40 18 L60 18 L70 24 L95 26 L95 40 L70 42 L40 42 L35 38 L15 38 L2 34 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="30" y="42" width="12" height="14" fill="' + c + '"/><rect x="55" y="42" width="20" height="10" rx="2" fill="' + c + '"/></svg>'; }
+function svgP90(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 50"><path d="M10 20 Q30 10 55 15 L70 18 L85 18 L95 22 L95 32 L85 36 L65 36 L45 40 L30 40 L15 34 L10 28 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><path d="M20 22 L40 18" stroke="#1a1a1f" stroke-width="1.5" fill="none"/><path d="M25 26 L45 22" stroke="#1a1a1f" stroke-width="1.5" fill="none"/></svg>'; }
+function svgBizon(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 100 50"><path d="M5 22 Q25 14 50 18 L80 20 L95 24 L95 32 L80 36 L50 38 L5 32 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><ellipse cx="60" cy="28" rx="18" ry="6" fill="#1a1a1f" opacity="0.4"/></svg>'; }
+function svgFiveSeven(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 60 55"><path d="M10 15 L45 15 L50 20 L50 35 L42 38 L40 50 L20 50 L18 38 L10 35 Z" fill="' + c + '" stroke="#222" stroke-width="1"/></svg>'; }
+function svgTec9(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 60 60"><path d="M10 10 L48 12 L55 18 L55 35 L45 38 L42 52 L25 55 L15 48 L12 35 Z" fill="' + c + '" stroke="#222" stroke-width="1"/></svg>'; }
+function svgMolotov(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 60 80"><path d="M25 10 L35 10 L35 25 L45 35 Q52 48 48 62 Q44 74 30 74 Q16 74 12 62 Q8 48 15 35 L25 25 Z" fill="' + c + '" stroke="#222" stroke-width="1"/><path d="M28 15 L32 15" stroke="#fff" stroke-width="2" opacity="0.6"/></svg>'; }
+function svgSmoke(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 60 80"><rect x="22" y="15" width="16" height="55" rx="3" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="26" y="8" width="8" height="10" rx="2" fill="' + c + '"/><circle cx="30" cy="40" r="8" fill="#fff" opacity="0.2"/></svg>'; }
+function svgFlash(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 60 80"><rect x="22" y="20" width="16" height="50" rx="3" fill="' + c + '" stroke="#222" stroke-width="1"/><rect x="24" y="10" width="12" height="14" rx="2" fill="#444"/><circle cx="30" cy="45" r="7" fill="#fff" opacity="0.3"/></svg>'; }
+function svgC4(c) { c = c || '#8a8a95'; return '<svg viewBox="0 0 70 60"><rect x="10" y="15" width="50" height="35" rx="3" fill="' + c + '" stroke="#222" stroke-width="1.5"/><circle cx="35" cy="30" r="8" fill="#1a1a1f"/><rect x="20" y="10" width="8" height="8" rx="1" fill="' + c + '"/><rect x="42" y="10" width="8" height="8" rx="1" fill="' + c + '"/></svg>'; }
+function svgCrate(c) { c = c || '#8a6914'; return '<svg viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="4" fill="' + c + '" stroke="#3a2508" stroke-width="2"/><rect x="15" y="20" width="70" height="10" fill="#5c3a08"/><path d="M15 45 L85 45 M15 60 L85 60" stroke="#5c3a08" stroke-width="1.5"/><rect x="40" y="15" width="20" height="12" rx="2" fill="#3a2508"/><circle cx="50" cy="55" r="8" fill="#b8860b"/></svg>'; }
+function svgCrateOrange(c) { c = c || '#c47a12'; return '<svg viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="4" fill="' + c + '" stroke="#5c3a08" stroke-width="2"/><rect x="15" y="20" width="70" height="10" fill="#8b5a12"/><path d="M15 45 L85 45 M15 60 L85 60" stroke="#8b5a12" stroke-width="1.5"/><rect x="40" y="15" width="20" height="12" rx="2" fill="#5c3a08"/><circle cx="50" cy="55" r="8" fill="#f5b800"/></svg>'; }
+function svgCratePurple(c) { c = c || '#6a3a8a'; return '<svg viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="4" fill="' + c + '" stroke="#3a1a55" stroke-width="2"/><rect x="15" y="20" width="70" height="10" fill="#4a1a6a"/><path d="M15 45 L85 45 M15 60 L85 60" stroke="#4a1a6a" stroke-width="1.5"/><rect x="40" y="15" width="20" height="12" rx="2" fill="#3a1a55"/><circle cx="50" cy="55" r="8" fill="#b886f5"/></svg>'; }
+function svgCrateRed(c) { c = c || '#8a2a2a'; return '<svg viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="4" fill="' + c + '" stroke="#4a0a0a" stroke-width="2"/><rect x="15" y="20" width="70" height="10" fill="#5a0a0a"/><path d="M15 45 L85 45 M15 60 L85 60" stroke="#5a0a0a" stroke-width="1.5"/><rect x="40" y="15" width="20" height="12" rx="2" fill="#4a0a0a"/><circle cx="50" cy="55" r="8" fill="#eb4b4b"/></svg>'; }
+function svgCrateGold(c) { c = c || '#c47a12'; return '<svg viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="4" fill="' + c + '" stroke="#5c3a08" stroke-width="2.5"/><rect x="15" y="20" width="70" height="10" fill="#f5b800"/><path d="M15 45 L85 45 M15 60 L85 60" stroke="#f5b800" stroke-width="2"/><rect x="40" y="15" width="20" height="12" rx="2" fill="#8b5a12"/><circle cx="50" cy="55" r="9" fill="#fff" opacity="0.6"/><path d="M50 40 L54 48 L62 48 L56 54 L58 62 L50 58 L42 62 L44 54 L38 48 L46 48 Z" fill="#fff" opacity="0.9"/></svg>'; }
+function svgCrateBlue(c) { c = c || '#1a4a8a'; return '<svg viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="4" fill="' + c + '" stroke="#0a2a5a" stroke-width="2"/><rect x="15" y="20" width="70" height="10" fill="#2a5a9a"/><path d="M15 45 L85 45 M15 60 L85 60" stroke="#2a5a9a" stroke-width="1.5"/><rect x="40" y="15" width="20" height="12" rx="2" fill="#0a2a5a"/><circle cx="50" cy="55" r="8" fill="#4a9eff"/></svg>'; }
+function svgCrateGreen(c) { c = c || '#2a5a2a'; return '<svg viewBox="0 0 100 100"><rect x="15" y="20" width="70" height="60" rx="4" fill="' + c + '" stroke="#0a2a0a" stroke-width="2"/><rect x="15" y="20" width="70" height="10" fill="#3a7a3a"/><path d="M15 45 L85 45 M15 60 L85 60" stroke="#3a7a3a" stroke-width="1.5"/><rect x="40" y="15" width="20" height="12" rx="2" fill="#0a2a0a"/><circle cx="50" cy="55" r="8" fill="#22c55e"/></svg>'; }
+
+/* ---------- КЕЙСЫ ---------- */
+var CASES = [
+    {
+        id: "starter",
+        name: "Starter Case",
+        desc: "Базовый кейс для новичков. Простые скины и стартовый набор.",
+        price: 100,
+        badge: null,
+        icon: svgCrate('#8a6914'),
+        items: [
+            { name: "P250 | Sand Dune", rarity: "consumer", price: 20, icon: svgP250('#b0c3d9') },
+            { name: "Glock-18 | Groundwater", rarity: "consumer", price: 25, icon: svgGlock('#b0c3d9') },
+            { name: "MP9 | Storm", rarity: "consumer", price: 30, icon: svgMp9('#b0c3d9') },
+            { name: "Five-SeveN | Forest", rarity: "industrial", price: 60, icon: svgFiveSeven('#5e98d9') },
+            { name: "Galil AR | Sage Spray", rarity: "industrial", price: 75, icon: svgGalil('#5e98d9') },
+            { name: "UMP-45 | Urban DDPAT", rarity: "milspec", price: 180, icon: svgUmp('#4b69ff') },
+            { name: "FAMAS | Doomkitty", rarity: "restricted", price: 450, icon: svgFamas('#8847ff') },
+            { name: "AWP | Safari Mesh", rarity: "classified", price: 1200, icon: svgAWP('#d32ce6') }
+        ]
+    },
+    {
+        id: "milspec",
+        name: "Mil-Spec Case",
+        desc: "Кейс милитари-класса. Оружие в камуфляже и тактической раскраске.",
+        price: 250,
+        badge: null,
+        icon: svgCrateBlue('#1a4a8a'),
+        items: [
+            { name: "USP-S | Forest Leaves", rarity: "consumer", price: 40, icon: svgUSP('#b0c3d9') },
+            { name: "Tec-9 | Urban DDPAT", rarity: "consumer", price: 45, icon: svgTec9('#b0c3d9') },
+            { name: "Molotov | Urban", rarity: "industrial", price: 90, icon: svgMolotov('#5e98d9') },
+            { name: "MAC-10 | Silver", rarity: "industrial", price: 110, icon: svgMac10('#5e98d9') },
+            { name: "MP9 | Bulldozer", rarity: "milspec", price: 240, icon: svgMp9('#4b69ff') },
+            { name: "UMP-45 | Blaze", rarity: "milspec", price: 320, icon: svgUmp('#4b69ff') },
+            { name: "M4A4 | Desert-Strike", rarity: "restricted", price: 780, icon: svgM4('#8847ff') },
+            { name: "AK-47 | Emerald Pinstripe", rarity: "classified", price: 2400, icon: svgAK('#d32ce6') }
+        ]
+    },
+    {
+        id: "restricted",
+        name: "Restricted Case",
+        desc: "Ограниченная серия. Редкие раскраски и редкие паттерны.",
+        price: 500,
+        badge: "new",
+        icon: svgCratePurple('#6a3a8a'),
+        items: [
+            { name: "P250 | Undertow", rarity: "consumer", price: 60, icon: svgP250('#b0c3d9') },
+            { name: "Glock-18 | Water Elemental", rarity: "industrial", price: 140, icon: svgGlock('#5e98d9') },
+            { name: "AUG | Akihabara Accept", rarity: "industrial", price: 200, icon: svgAUG('#5e98d9') },
+            { name: "Galil AR | Chatterbox", rarity: "milspec", price: 380, icon: svgGalil('#4b69ff') },
+            { name: "MP9 | Hydra", rarity: "milspec", price: 450, icon: svgMp9('#4b69ff') },
+            { name: "FAMAS | Roll Cage", rarity: "restricted", price: 920, icon: svgFamas('#8847ff') },
+            { name: "AWP | Redline", rarity: "classified", price: 3200, icon: svgAWP('#d32ce6') },
+            { name: "AK-47 | Redline", rarity: "covert", price: 7500, icon: svgAK('#eb4b4b') }
+        ]
+    },
+    {
+        id: "classified",
+        name: "Classified Case",
+        desc: "Засекреченный кейс. Опасные скины с высокой стоимостью.",
+        price: 1000,
+        badge: null,
+        icon: svgCrateRed('#8a2a2a'),
+        items: [
+            { name: "Five-SeveN | Case Hardened", rarity: "consumer", price: 80, icon: svgFiveSeven('#b0c3d9') },
+            { name: "Tec-9 | Nuclear Threat", rarity: "industrial", price: 280, icon: svgTec9('#5e98d9') },
+            { name: "P90 | Asiimov", rarity: "milspec", price: 620, icon: svgP90('#4b69ff') },
+            { name: "Bizon | Judgement of Anubis", rarity: "milspec", price: 700, icon: svgBizon('#4b69ff') },
+            { name: "Deagle | Blaze", rarity: "restricted", price: 1600, icon: svgDeagle('#8847ff') },
+            { name: "M4A1-S | Cyrex", rarity: "restricted", price: 1900, icon: svgM4('#8847ff') },
+            { name: "AWP | Asiimov", rarity: "classified", price: 5500, icon: svgAWP('#d32ce6') },
+            { name: "AK-47 | Fire Serpent", rarity: "covert", price: 18000, icon: svgAK('#eb4b4b') }
+        ]
+    },
+    {
+        id: "covert",
+        name: "Covert Case",
+        desc: "Скрытый кейс. Только для настоящих охотников за скинами.",
+        price: 2500,
+        badge: "hot",
+        icon: svgCrateOrange('#c47a12'),
+        items: [
+            { name: "USP-S | Kill Confirmed", rarity: "consumer", price: 200, icon: svgUSP('#b0c3d9') },
+            { name: "AUG | Chameleon", rarity: "industrial", price: 400, icon: svgAUG('#5e98d9') },
+            { name: "Nova | Hyper Beast", rarity: "milspec", price: 900, icon: svgNova('#4b69ff') },
+            { name: "SG 553 | Integrale", rarity: "milspec", price: 1100, icon: svgSG('#4b69ff') },
+            { name: "M4A4 | The Emperor", rarity: "restricted", price: 2800, icon: svgM4('#8847ff') },
+            { name: "AK-47 | Asiimov", rarity: "classified", price: 8500, icon: svgAK('#d32ce6') },
+            { name: "M4A1-S | Hyper Beast", rarity: "classified", price: 11000, icon: svgM4('#d32ce6') },
+            { name: "AWP | Dragon Lore", rarity: "covert", price: 65000, icon: svgAWP('#eb4b4b') }
+        ]
+    },
+    {
+        id: "knives",
+        name: "Knife Case",
+        desc: "Кейс с ножами. Самые дорогие скины CS2 в одном месте.",
+        price: 5000,
+        badge: "top",
+        icon: svgCrateGold('#c47a12'),
+        items: [
+            { name: "★ Navaja Knife | Blue Steel", rarity: "consumer", price: 800, icon: svgButterfly('#b0c3d9') },
+            { name: "★ Gut Knife | Urban", rarity: "industrial", price: 1500, icon: svgButterfly('#5e98d9') },
+            { name: "★ Flip Knife | Night", rarity: "milspec", price: 3200, icon: svgButterfly('#4b69ff') },
+            { name: "★ Falchion Knife | Boreal", rarity: "milspec", price: 3800, icon: svgButterfly('#4b69ff') },
+            { name: "★ Huntsman Knife | Crimson", rarity: "restricted", price: 6800, icon: svgButterfly('#8847ff') },
+            { name: "★ Butterfly Knife | Blue Steel", rarity: "classified", price: 18000, icon: svgButterfly('#d32ce6') },
+            { name: "★ Karambit | Fade", rarity: "classified", price: 32000, icon: svgKarambit('#d32ce6') },
+            { name: "★ Karambit | Case Hardened Blue Gem", rarity: "contraband", price: 250000, icon: svgKarambit('#ffb700') }
+        ]
+    },
+    {
+        id: "elite",
+        name: "Elite Case",
+        desc: "Элитный кейс. Легендарные скины с редчайшими паттернами.",
+        price: 10000,
+        badge: "top",
+        icon: svgCrateGold('#c47a12'),
+        items: [
+            { name: "USP-S | Neo-Noir", rarity: "consumer", price: 500, icon: svgUSP('#b0c3d9') },
+            { name: "Negev | Mjolnir", rarity: "industrial", price: 1200, icon: svgNegev('#5e98d9') },
+            { name: "Deagle | Printstream", rarity: "milspec", price: 2500, icon: svgDeagle('#4b69ff') },
+            { name: "M4A1-S | Printstream", rarity: "restricted", price: 5500, icon: svgM4('#8847ff') },
+            { name: "AK-47 | Bloodsport", rarity: "restricted", price: 6800, icon: svgAK('#8847ff') },
+            { name: "AWP | Gungnir", rarity: "classified", price: 28000, icon: svgAWP('#d32ce6') },
+            { name: "AK-47 | Wild Lotus", rarity: "covert", price: 45000, icon: svgAK('#eb4b4b') },
+            { name: "AWP | Medusa", rarity: "covert", price: 38000, icon: svgAWP('#eb4b4b') }
+        ]
+    },
+    {
+        id: "contraband",
+        name: "Contraband Case",
+        desc: "Контрабандный кейс. Скины, которых официально не существует.",
+        price: 25000,
+        badge: "top",
+        icon: svgCrateGold('#c47a12'),
+        items: [
+            { name: "Glock-18 | Fade", rarity: "consumer", price: 3000, icon: svgGlock('#b0c3d9') },
+            { name: "P250 | Whiteout", rarity: "industrial", price: 6000, icon: svgP250('#5e98d9') },
+            { name: "Five-SeveN | Hyper Beast", rarity: "milspec", price: 12000, icon: svgFiveSeven('#4b69ff') },
+            { name: "P90 | Death by Kitty", rarity: "restricted", price: 22000, icon: svgP90('#8847ff') },
+            { name: "M4A4 | Howl", rarity: "classified", price: 65000, icon: svgM4('#d32ce6') },
+            { name: "AK-47 | Case Hardened Blue Gem", rarity: "covert", price: 180000, icon: svgAK('#eb4b4b') },
+            { name: "M4A4 | Howl (StatTrak)", rarity: "covert", price: 300000, icon: svgM4('#eb4b4b') },
+            { name: "Karambit | Case Hardened Blue Gem", rarity: "contraband", price: 1200000, icon: svgKarambit('#ffb700') }
+        ]
+    }
+];
+
+/* ============================================================
+   СОСТОЯНИЕ
+   ============================================================ */
+
+var DEFAULT_BALANCE = 1000;
+
+var state = {
+    balance: DEFAULT_BALANCE,
+    nickname: "Игрок",
+    opened: 0,
+    topDrop: "—",
+    history: [],
+    currentCase: null,
+    spinning: false
+};
+
+/* Загрузка/сохранение */
+function loadState() {
+    try {
+        var saved = localStorage.getItem('cs2case_state');
+        if (saved) {
+            var data = JSON.parse(saved);
+            state.balance = typeof data.balance === 'number' ? data.balance : DEFAULT_BALANCE;
+            state.nickname = data.nickname || "Игрок";
+            state.opened = data.opened || 0;
+            state.topDrop = data.topDrop || "—";
+            state.history = data.history || [];
+        }
+    } catch (e) { /* ignore */ }
+}
+
+function saveState() {
+    try {
+        localStorage.setItem('cs2case_state', JSON.stringify({
+            balance: state.balance,
+            nickname: state.nickname,
+            opened: state.opened,
+            topDrop: state.topDrop,
+            history: state.history.slice(0, 30)
+        }));
+    } catch (e) { /* ignore */ }
+}
+
+/* ============================================================
+   ЗВУК
+   ============================================================ */
+
+var audioCtx = null;
+
+function getAudio() {
+    if (!audioCtx) {
+        try {
+            var Ctx = window.AudioContext || window.webkitAudioContext;
+            if (!Ctx) return null;
+            audioCtx = new Ctx();
+        } catch (e) { return null; }
+    }
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+}
+
+function playClick() {
+    var ctx = getAudio();
+    if (!ctx) return;
+    var o = ctx.createOscillator();
+    var g = ctx.createGain();
+    o.type = 'square';
+    o.frequency.setValueAtTime(700, ctx.currentTime);
+    o.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.08);
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.05, ctx.currentTime + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.1);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + 0.12);
+}
+
+function playTick() {
+    var ctx = getAudio();
+    if (!ctx) return;
+    var o = ctx.createOscillator();
+    var g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 1600 + Math.random() * 600;
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.025, ctx.currentTime + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.05);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + 0.06);
+}
+
+function playWin(rarity) {
+    var ctx = getAudio();
+    if (!ctx) return;
+    var freqs = {
+        consumer: [220, 277],
+        industrial: [261, 329],
+        milspec: [329, 415, 523],
+        restricted: [415, 523, 659],
+        classified: [523, 659, 784, 1046],
+        covert: [659, 784, 988, 1318],
+        contraband: [523, 659, 784, 1046, 1318, 1568]
+    };
+    var notes = freqs[rarity] || freqs.consumer;
+    var start = ctx.currentTime;
+    for (var i = 0; i < notes.length; i++) {
+        (function (freq, idx) {
+            var o = ctx.createOscillator();
+            var g = ctx.createGain();
+            o.type = 'triangle';
+            o.frequency.value = freq;
+            var t = start + idx * 0.09;
+            g.gain.setValueAtTime(0.0001, t);
+            g.gain.exponentialRampToValueAtTime(0.06, t + 0.02);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + 0.55);
+            o.connect(g); g.connect(ctx.destination);
+            o.start(t); o.stop(t + 0.6);
+        })(notes[i], i);
+    }
+}
+
+/* ============================================================
+   UI
+   ============================================================ */
+
+function formatMoney(n) {
+    return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+function updateAll() {
+    document.getElementById('balanceValue').textContent = formatMoney(state.balance);
+    document.getElementById('profileBalance').textContent = formatMoney(state.balance);
+    document.getElementById('profileOpened').textContent = state.opened;
+    document.getElementById('profileTop').textContent = state.topDrop;
+    document.getElementById('profileName').textContent = state.nickname;
+    document.getElementById('profileNickname').textContent = state.nickname;
+    var initial = state.nickname.charAt(0).toUpperCase() || 'U';
+    document.getElementById('profileAvatar').textContent = initial;
+    document.getElementById('profileAvatarLg').textContent = initial;
+}
+
+function renderCases() {
+    var grid = document.getElementById('casesGrid');
+    var html = '';
+    for (var i = 0; i < CASES.length; i++) {
+        var c = CASES[i];
+        var badgeHtml = '';
+        if (c.badge === 'hot') badgeHtml = '<div class="case-badge hot">HOT</div>';
+        else if (c.badge === 'new') badgeHtml = '<div class="case-badge new">NEW</div>';
+        else if (c.badge === 'top') badgeHtml = '<div class="case-badge top">TOP</div>';
+
+        html += '<div class="case-card" onclick="viewCase(\'' + c.id + '\')">';
+        html += badgeHtml;
+        html += '<div class="case-image">' + c.icon + '</div>';
+        html += '<div class="case-name">' + c.name + '</div>';
+        html += '<div class="case-desc">' + c.desc + '</div>';
+        html += '<div class="case-footer">';
+        html += '<div class="case-price">' + formatMoney(c.price) + ' ₽</div>';
+        html += '<div class="case-arrow">→</div>';
+        html += '</div>';
+        html += '</div>';
+    }
+    grid.innerHTML = html;
+}
+
+function renderHistory() {
+    var list = document.getElementById('historyList');
+    if (state.history.length === 0) {
+        list.innerHTML = '<div class="history-empty">Пока ничего не выпало</div>';
+        return;
+    }
+    var html = '';
+    for (var i = 0; i < state.history.length; i++) {
+        var h = state.history[i];
+        html += '<div class="history-item" data-r="' + h.rarity + '">';
+        html += '<div class="history-name">' + h.name + '</div>';
+        html += '<div class="history-price">' + formatMoney(h.price) + ' ₽</div>';
+        html += '<div class="history-rarity" data-r="' + h.rarity + '">' + RARITY[h.rarity].name + '</div>';
+        html += '</div>';
+    }
+    list.innerHTML = html;
+}
+
+function showPage(id) {
+    var pages = document.querySelectorAll('.page');
+    for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+    var target = document.getElementById(id);
+    if (target) target.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'auto' });
+}
+
+function setActiveNav(navId) {
+    var links = document.querySelectorAll('.nav-link');
+    for (var i = 0; i < links.length; i++) links[i].classList.remove('active');
+    var el = document.getElementById(navId);
+    if (el) el.classList.add('active');
+}
+
+function goHome() {
+    playClick();
+    showPage('pageHome');
+    setActiveNav('navCases');
+}
+
+function openProfile() {
+    playClick();
+    showPage('pageProfile');
+    setActiveNav('navProfile');
+}
+
+function viewCase(id) {
+    var c = null;
+    for (var i = 0; i < CASES.length; i++) if (CASES[i].id === id) { c = CASES[i]; break; }
+    if (!c) return;
+
+    playClick();
+    state.currentCase = c;
+
+    document.getElementById('casePageIcon').innerHTML = c.icon;
+    document.getElementById('casePageTitle').textContent = c.name;
+    document.getElementById('casePageDesc').textContent = c.desc;
+    document.getElementById('casePagePrice').textContent = formatMoney(c.price) + ' ₽';
+    document.getElementById('casePageCount').textContent = c.items.length;
+
+    /* Лучший дроп */
+    var best = c.items[0];
+    for (var k = 0; k < c.items.length; k++) if (c.items[k].price > best.price) best = c.items[k];
+    document.getElementById('casePageBest').textContent = best.name;
+
+    /* Содержимое */
+    var contentsHtml = '';
+    var sorted = c.items.slice().sort(function (a, b) { return b.price - a.price; });
+    for (var m = 0; m < sorted.length; m++) {
+        var it = sorted[m];
+        contentsHtml += '<div class="content-item" data-r="' + it.rarity + '">';
+        contentsHtml += '<div class="content-icon">' + it.icon + '</div>';
+        contentsHtml += '<div class="content-info">';
+        contentsHtml += '<div class="content-name">' + it.name + '</div>';
+        contentsHtml += '<div class="content-rarity" data-r="' + it.rarity + '">' + RARITY[it.rarity].name + '</div>';
+        contentsHtml += '</div></div>';
+    }
+    document.getElementById('contentsGrid').innerHTML = contentsHtml;
+
+    /* Кнопка открытия */
+    var btn = document.getElementById('casePageOpenBtn');
+    btn.textContent = 'Открыть за ' + formatMoney(c.price) + ' ₽';
+    btn.onclick = function () { startOpening(c); };
+    btn.disabled = false;
+
+    /* Скрыть рулетку */
+    document.getElementById('rouletteWrap').style.display = 'none';
+
+    showPage('pageCase');
+    setActiveNav('navCases');
+}
+
+/* ============================================================
+   ОТКРЫТИЕ
+   ============================================================ */
+
+function pickWeighted(items) {
+    var totalWeight = 0;
+    for (var i = 0; i < items.length; i++) {
+        totalWeight += RARITY[items[i].rarity].weight;
+    }
+    var roll = Math.random() * totalWeight;
+    var acc = 0;
+    for (var j = 0; j < items.length; j++) {
+        acc += RARITY[items[j].rarity].weight;
+        if (roll <= acc) return items[j];
+    }
+    return items[items.length - 1];
+}
+
+function buildRoulette(caseData, winner) {
+    var track = document.getElementById('rouletteTrack');
+    var items = [];
+    for (var i = 0; i < 55; i++) {
+        items.push(caseData.items[Math.floor(Math.random() * caseData.items.length)]);
+    }
+    items.push(winner);
+    for (var k = 0; k < 12; k++) {
+        items.push(caseData.items[Math.floor(Math.random() * caseData.items.length)]);
+    }
+
+    var html = '';
+    for (var m = 0; m < items.length; m++) {
+        html += '<div class="roulette-item" data-r="' + items[m].rarity + '">';
+        html += '<div class="roulette-icon">' + items[m].icon + '</div>';
+        html += '<div class="roulette-name">' + items[m].name + '</div>';
+        html += '</div>';
+    }
+    track.innerHTML = html;
+
+    track.style.transition = 'none';
+    track.style.transform = 'translate3d(0, 0, 0)';
+
+    return 55;
+}
+
+function startOpening(caseData) {
+    if (state.spinning) return;
+
+    if (state.balance < caseData.price) {
+        playClick();
+        alert('Недостаточно средств. Нужно: ' + formatMoney(caseData.price) + ' ₽');
+        return;
+    }
+
+    playClick();
+    state.balance -= caseData.price;
+    updateAll();
+    saveState();
+
+    state.spinning = true;
+
+    var winner = pickWeighted(caseData.items);
+    var winnerSlot = buildRoulette(caseData, winner);
+
+    var wrap = document.getElementById('rouletteWrap');
+    wrap.style.display = 'block';
+    wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    setTimeout(function () {
+        var itemWidth = 150 + 10;
+        var wrapWidth = wrap.offsetWidth;
+        var targetOffset = winnerSlot * itemWidth + itemWidth / 2 - wrapWidth / 2;
+        var jitter = (Math.random() - 0.5) * itemWidth * 0.5;
+        targetOffset += jitter;
+
+        var track = document.getElementById('rouletteTrack');
+        track.style.transition = 'transform 6.5s cubic-bezier(0.15, 0.9, 0.15, 1)';
+        track.style.transform = 'translate3d(-' + targetOffset + 'px, 0, 0)';
+
+        /* Тики */
+        var startTime = performance.now();
+        function tickLoop() {
+            var elapsed = performance.now() - startTime;
+            if (elapsed > 6500) return;
+            playTick();
+            var delay = 50 + (elapsed / 6500) * 350;
+            setTimeout(tickLoop, delay);
+        }
+        tickLoop();
+    }, 100);
+
+    setTimeout(function () {
+        state.spinning = false;
+        showResult(winner, caseData);
+    }, 6700);
+}
+
+function showResult(item, caseData) {
+    playWin(item.rarity);
+
+    var overlay = document.getElementById('resultOverlay');
+    var card = document.getElementById('resultCard');
+    var rarity = document.getElementById('resultRarity');
+    var icon = document.getElementById('resultIcon');
+    var name = document.getElementById('resultName');
+    var price = document.getElementById('resultPrice');
+    var glow = document.getElementById('resultGlow');
+
+    card.setAttribute('data-r', item.rarity);
+    rarity.setAttribute('data-r', item.rarity);
+    rarity.textContent = RARITY[item.rarity].name;
+    icon.innerHTML = item.icon;
+    name.textContent = item.name;
+    price.textContent = 'Стоимость: ' + formatMoney(item.price) + ' ₽';
+
+    var colors = {
+        consumer: 'rgba(176, 195, 217, 0.4)',
+        industrial: 'rgba(94, 152, 217, 0.5)',
+        milspec: 'rgba(75, 105, 255, 0.5)',
+        restricted: 'rgba(136, 71, 255, 0.5)',
+        classified: 'rgba(211, 44, 230, 0.6)',
+        covert: 'rgba(235, 75, 75, 0.7)',
+        contraband: 'rgba(255, 183, 0, 0.8)'
+    };
+    glow.style.color = colors[item.rarity] || colors.consumer;
+
+    overlay.classList.add('show');
+
+    /* Обновление статистики */
+    state.opened++;
+    state.history.unshift({ name: item.name, rarity: item.rarity, price: item.price });
+    if (state.history.length > 30) state.history.pop();
+
+    /* Топ-дроп */
+    var topPrice = 0;
+    if (state.topDrop !== "—") {
+        /* уже есть */
+    }
+    var best = null;
+    for (var i = 0; i < state.history.length; i++) {
+        if (!best || state.history[i].price > best.price) best = state.history[i];
+    }
+    if (best) state.topDrop = best.name;
+
+    updateAll();
+    renderHistory();
+    saveState();
+
+    var againBtn = document.getElementById('resultAgain');
+    againBtn.onclick = function () {
+        closeResult();
+        setTimeout(function () { startOpening(caseData); }, 100);
+    };
+}
+
+function closeResult() {
+    playClick();
+    document.getElementById('resultOverlay').classList.remove('show');
+}
+
+/* ============================================================
+   ПРОФИЛЬ
+   ============================================================ */
+
+function changeNickname() {
+    var name = prompt('Введите новый никнейм:', state.nickname);
+    if (name && name.trim().length > 0) {
+        state.nickname = name.trim().slice(0, 20);
+        updateAll();
+        saveState();
+    }
+}
+
+function addBalance() {
+    state.balance += 1000;
+    updateAll();
+    saveState();
+    playClick();
+}
+
+function resetBalance() {
+    if (!confirm('Сбросить баланс до 1000 ₽?')) return;
+    state.balance = DEFAULT_BALANCE;
+    updateAll();
+    saveState();
+    playClick();
+}
+
+function resetAll() {
+    if (!confirm('Полный сброс профиля? Баланс, история, статистика — всё обнулится.')) return;
+    state.balance = DEFAULT_BALANCE;
+    state.opened = 0;
+    state.topDrop = "—";
+    state.history = [];
+    state.nickname = "Игрок";
+    updateAll();
+    renderHistory();
+    saveState();
+    playClick();
+}
+
+/* ============================================================
+   СТАРТ
+   ============================================================ */
+
+window.onload = function () {
+    loadState();
+    renderCases();
+    renderHistory();
+    updateAll();
+    showPage('pageHome');
+    setActiveNav('navCases');
+};
+
+document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeResult();
+});
+
+document.getElementById('resultOverlay').addEventListener('click', function (e) {
+    if (e.target === this) closeResult();
+});
+</script>
+</body>
+</html>
